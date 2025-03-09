@@ -4,18 +4,18 @@ pipeline {
         jdk 'java-17'
         maven 'maven3'
     }
+     parameters {
+        choice(name:'deploy_env', choices: ['blue','green'], description: 'choose in which env to deploy')
+        choice(name:'docker_tag', choices: ['blue','green'], description: 'choose docker image tag for deployment')
+        booleanParam(name:'switch_traffic', defaultValue: false, description: 'switch traffic between blue and green environments')
+    }
     environment {
         scanner_home = tool 'sonar-scanner'
         image_name = "saranvemireddy/bankapp"
         tag = "${params.docker_tag}"
         kube_namespace = "webapps"
     }
-    parameters {
-        choice(name:'deploy_env', choices: ['blue','green'], description: 'choose in which env to deploy')
-        choice(name:'docker_tag', choices: ['blue','green'], description: 'choose docker image tag for deployment')
-        booleanParam(name:'switch_traffic', defaultValue: false, description: 'switch traffic between blue and green environments')
-    }
-
+   
     stages {
         stage('Git Checkout') {
             steps {
