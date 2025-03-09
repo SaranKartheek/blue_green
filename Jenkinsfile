@@ -103,7 +103,7 @@ pipeline {
         stage('Deploy MySQL Deployment and service') {
             steps {
                 script {
-                    withKubeConfig(caCertificate: '', clusterName: 'bluegreen.us-east-1.eksctl.io', contextName: '', credentialsId: 'kubecreds', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://6295519D6DEA7638C572AD7E6D4AFCA7.gr7.us-east-1.eks.amazonaws.com') {
+                    withKubeConfig(caCertificate: '', clusterName: 'clusterdemo.us-east-1.eksctl.io', contextName: '', credentialsId: 'kubecreds', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://65F132E9D9BDF0AD58D37A22C7B6911F.gr7.us-east-1.eks.amazonaws.com') {
                         sh "kubectl apply -f mysql-ds.yml -n ${kube_namespace}"
                     }
                 }
@@ -112,7 +112,7 @@ pipeline {
         stage('Deploy Bankapp service') {
             steps {
                 script {
-                    withKubeConfig(caCertificate: '', clusterName: 'bluegreen.us-east-1.eksctl.io', contextName: '', credentialsId: 'kubecreds', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://6295519D6DEA7638C572AD7E6D4AFCA7.gr7.us-east-1.eks.amazonaws.com') {
+                    withKubeConfig(caCertificate: '', clusterName: 'clusterdemo.us-east-1.eksctl.io', contextName: '', credentialsId: 'kubecreds', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://65F132E9D9BDF0AD58D37A22C7B6911F.gr7.us-east-1.eks.amazonaws.com') {
                         sh "kubectl apply -f bankapp-service.yml -n ${kube_namespace}"
                     }
                 }
@@ -128,7 +128,7 @@ pipeline {
                     else {
                         deploymentFile = "app-deployment-green.yml"
                     }
-                    withKubeConfig(caCertificate: '', clusterName: 'bluegreen.us-east-1.eksctl.io', contextName: '', credentialsId: 'kubecreds', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://6295519D6DEA7638C572AD7E6D4AFCA7.gr7.us-east-1.eks.amazonaws.com') {
+                    withKubeConfig(caCertificate: '', clusterName: 'clusterdemo.us-east-1.eksctl.io', contextName: '', credentialsId: 'kubecreds', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://65F132E9D9BDF0AD58D37A22C7B6911F.gr7.us-east-1.eks.amazonaws.com') {
                         sh "kubectl apply -f ${deploymentFile} -n ${kube_namespace}"
                     }
                 }
@@ -141,7 +141,7 @@ pipeline {
             steps {
                 script {
                     def newEnv = params.deploy_env
-                    withKubeConfig(caCertificate: '', clusterName: 'bluegreen.us-east-1.eksctl.io', contextName: '', credentialsId: 'kubecreds', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://6295519D6DEA7638C572AD7E6D4AFCA7.gr7.us-east-1.eks.amazonaws.com') {
+                    withKubeConfig(caCertificate: '', clusterName: 'clusterdemo.us-east-1.eksctl.io', contextName: '', credentialsId: 'kubecreds', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://65F132E9D9BDF0AD58D37A22C7B6911F.gr7.us-east-1.eks.amazonaws.com') {
                         sh '''
                             kubectl patch service bankapp-service -p "{\\"spec\\": {\\"selector\\": {\\"app\\": \\"bankapp\\", \\"version\\": \\"''' + newEnv + '''\\"}}}" -n ${kube_namespace}
                         '''
@@ -153,7 +153,7 @@ pipeline {
             steps {
                 script {
                     def verifyEnv = params.deploy_env
-                    withKubeConfig(caCertificate: '', clusterName: 'bluegreen.us-east-1.eksctl.io', contextName: '', credentialsId: 'kubecreds', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://6295519D6DEA7638C572AD7E6D4AFCA7.gr7.us-east-1.eks.amazonaws.com') {
+                    withKubeConfig(caCertificate: '', clusterName: 'clusterdemo.us-east-1.eksctl.io', contextName: '', credentialsId: 'kubecreds', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://65F132E9D9BDF0AD58D37A22C7B6911F.gr7.us-east-1.eks.amazonaws.com') {
                         sh '''
                             kubectl get pods -l version=${verifyEnv} -n ${kube_namespace}
                             kubectl get svc bankapp-service -n ${kube_namespace}
